@@ -7,6 +7,16 @@
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
+    <repositories>
+        <repository>
+            <id>vertx-snapshots</id>
+            <url>${vertx.snapshotRepository}</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
     <properties>
         <maven.compiler.target>11</maven.compiler.target>
         <maven.compiler.source>11</maven.compiler.source>
@@ -18,6 +28,7 @@
 
         <grpc.version>1.50.2</grpc.version>
         <protoc.version>3.21.12</protoc.version>
+        <vertx.snapshotRepository>https://s01.oss.sonatype.org/content/repositories/snapshots/</vertx.snapshotRepository>
     </properties>
 
     <modules>
