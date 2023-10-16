@@ -106,7 +106,7 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <id>pre-compile</id>
+                        <id>default-compile</id>
                         <phase>process-resources</phase>
                         <goals>
                             <goal>compile</goal>
@@ -133,7 +133,6 @@
                     <pluginId>grpc-java</pluginId>
                     <pluginArtifact>io.grpc:protoc-gen-grpc-java:${grpc.version}:exe:${os.detected.classifier}
                     </pluginArtifact>
-                    <protoTestSourceRoot>${generated.output.dir}</protoTestSourceRoot>
                     <protoSourceRoot>${generated.output.dir}</protoSourceRoot>
                 </configuration>
                 <executions>
@@ -146,15 +145,6 @@
                         </configuration>
                         <goals>
                             <goal>compile</goal>
-                            <goal>compile-custom</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>test-compile</id>
-                        <phase>process-test-sources</phase>
-                        <goals>
-                            <goal>test-compile</goal>
-                            <goal>test-compile-custom</goal>
                         </goals>
                     </execution>
                 </executions>
