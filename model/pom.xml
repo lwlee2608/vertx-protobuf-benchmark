@@ -11,6 +11,10 @@
 
     <artifactId>model</artifactId>
 
+    <properties>
+        <generated.output.dir>${project.build.directory}/generated-sources/annotations</generated.output.dir>
+    </properties>
+
     <dependencies>
         <!-- Vertx -->
         <dependency>
@@ -21,12 +25,12 @@
             <groupId>io.vertx</groupId>
             <artifactId>vertx-codegen-protobuf</artifactId>
         </dependency>
-                <dependency>
-                    <groupId>io.vertx</groupId>
-                    <artifactId>vertx-codegen-processor</artifactId>
-                    <classifier>processor</classifier>
-                    <version>${vertx.version}</version>
-                </dependency>
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-codegen-processor</artifactId>
+            <classifier>processor</classifier>
+            <version>${vertx.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -48,67 +52,113 @@
                 <version>1.4.1.Final</version>
             </extension>
         </extensions>
-        <pluginManagement>
-            <plugins>
-                <!-- This is required to get Lombok working with vertx-codegen -->
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.6.2</version>
-                    <configuration>
-                        <annotationProcessorPaths>
-                            <path>
-                                <groupId>org.projectlombok</groupId>
-                                <artifactId>lombok</artifactId>
-                                <version>${lombok.version}</version>
-                            </path>
-                            <path>
-                                <groupId>io.vertx</groupId>
-                                <artifactId>vertx-codegen</artifactId>
-                                <classifier>processor</classifier>
-                                <version>${vertx.version}</version>
-                            </path>
-                            <path>
-                                <groupId>io.vertx</groupId>
-                                <artifactId>vertx-codegen-protobuf</artifactId>
-                                <version>${vertx.version}</version>
-                            </path>
-                        </annotationProcessorPaths>
-                    </configuration>
-                </plugin>
+        <plugins>
+            <!-- Copy proto files for Protoc Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <id>copy-standard-proto</id>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${generated.output.dir}</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.basedir}/src/main/resources/proto/</directory>
+                                    <includes>
+                                        <include>*.proto</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- This is required to get Lombok working with vertx-codegen -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.6.2</version>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                        <path>
+                            <groupId>io.vertx</groupId>
+                            <artifactId>vertx-codegen</artifactId>
+                            <classifier>processor</classifier>
+                            <version>${vertx.version}</version>
+                        </path>
+                        <path>
+                            <groupId>io.vertx</groupId>
+                            <artifactId>vertx-codegen-protobuf</artifactId>
+                            <version>${vertx.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>pre-compile</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>compile</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 
-                <!-- Protoc Plugin to test against dataModel Protocol Buffer converter -->
-                <plugin>
-                    <groupId>org.xolstice.maven.plugins</groupId>
-                    <artifactId>protobuf-maven-plugin</artifactId>
-                    <version>0.6.1</version>
-                    <configuration>
-                        <protocArtifact>com.google.protobuf:protoc:${protoc.version}:exe:${os.detected.classifier}</protocArtifact>
-                        <pluginId>grpc-java</pluginId>
-                        <pluginArtifact>io.grpc:protoc-gen-grpc-java:${grpc.version}:exe:${os.detected.classifier}</pluginArtifact>
-                        <protoTestSourceRoot>${project.build.directory}/generated-sources/annotations</protoTestSourceRoot>
-                        <protoSourceRoot>${project.build.directory}/generated-sources/annotations</protoSourceRoot>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <id>compile</id>
-                            <phase>process-sources</phase>
-                            <goals>
-                                <goal>compile</goal>
-                                <goal>compile-custom</goal>
-                            </goals>
-                        </execution>
-                        <execution>
-                            <id>test-compile</id>
-                            <phase>process-test-sources</phase>
-                            <goals>
-                                <goal>test-compile</goal>
-                                <goal>test-compile-custom</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-            </plugins>
-        </pluginManagement>
+            <!-- Protoc Plugin to test against dataModel Protocol Buffer converter -->
+            <plugin>
+                <groupId>org.xolstice.maven.plugins</groupId>
+                <artifactId>protobuf-maven-plugin</artifactId>
+                <version>0.6.1</version>
+                <configuration>
+                    <protocArtifact>com.google.protobuf:protoc:${protoc.version}:exe:${os.detected.classifier}
+                    </protocArtifact>
+                    <pluginId>grpc-java</pluginId>
+                    <pluginArtifact>io.grpc:protoc-gen-grpc-java:${grpc.version}:exe:${os.detected.classifier}
+                    </pluginArtifact>
+                    <protoTestSourceRoot>${generated.output.dir}</protoTestSourceRoot>
+                    <protoSourceRoot>${generated.output.dir}</protoSourceRoot>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>compile</id>
+                        <phase>compile</phase>
+                        <configuration>
+                            <outputDirectory>${project.basedir}/target/generated-sources/</outputDirectory>
+                            <clearOutputDirectory>false</clearOutputDirectory>
+                        </configuration>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>compile-custom</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>test-compile</id>
+                        <phase>process-test-sources</phase>
+                        <goals>
+                            <goal>test-compile</goal>
+                            <goal>test-compile-custom</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 </project>
