@@ -22,33 +22,41 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.TimeUnit;
 
 @Threads(8)
-@Fork(value = 1, warmups = 2)
+@Fork(value = 1, warmups = 3)
 @BenchmarkMode(Mode.AverageTime)
 @Warmup(iterations = 1, time = 1)
 @Measurement(iterations = 5, time = 1)
 @OutputTimeUnit(TimeUnit.MICROSECONDS)
-public class JsonBenchMark {
-    private static final Logger logger = LoggerFactory.getLogger(JsonBenchMark.class);
+public class JsonBenchmark {
+    private static final Logger logger = LoggerFactory.getLogger(JsonBenchmark.class);
 
     @State(Scope.Benchmark)
     public static class ExecutionPlan {
         TestSubject testSubject;
-        String json;
+        String onWire;
 
         @Setup(Level.Trial)
         public void setUp() {
-            testSubject = PlaceholderData.getTestSubjectPojo();
-            json = Json.encode(testSubject);
+            testSubject = PlaceholderData.getPojo();
+            onWire = Json.encode(testSubject);
         }
     }
 
     @Benchmark
     public TestSubject decode(ExecutionPlan plan){
-        return Json.decodeValue(plan.json, TestSubject.class);
+        return decode(plan.onWire);
     }
 
     @Benchmark
     public String encode(ExecutionPlan plan) {
-        return Json.encode(plan.testSubject);
+        return encode(plan.testSubject);
+    }
+
+    public TestSubject decode(String onWire) {
+        return Json.decodeValue(onWire, TestSubject.class);
+    }
+
+    public String encode(TestSubject testSubject) {
+        return Json.encode(testSubject);
     }
 }
