@@ -2,12 +2,13 @@ package io.github.lwlee2608.benchmark.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.vertx.codegen.annotations.DataObject;
+import io.vertx.codegen.protobuf.annotations.FieldNumberStrategy;
 import io.vertx.codegen.protobuf.annotations.ProtobufGen;
 import lombok.Data;
 
 @Data
 @DataObject
-@ProtobufGen
+@ProtobufGen(fieldNumberStrategy = FieldNumberStrategy.COMPACT)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TestSubject {
     private int intField;
