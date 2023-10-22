@@ -1,8 +1,8 @@
-package com.grpc.benchmark;
+package io.github.lwlee2608.benchmark;
 
-import com.grpc.benchmark.scenario.JsonBenchmark;
-import com.grpc.benchmark.scenario.ProtoGoogleBenchmark;
-import com.grpc.benchmark.scenario.ProtoVertxBenchmark;
+import io.github.lwlee2608.benchmark.scenario.JsonBenchmark;
+import io.github.lwlee2608.benchmark.scenario.ProtoGoogleBenchmark;
+import io.github.lwlee2608.benchmark.scenario.ProtoVertxBenchmark;
 import org.openjdk.jmh.profile.AsyncProfiler;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.options.Options;

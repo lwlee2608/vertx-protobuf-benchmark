@@ -9,10 +9,10 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>grpc-benchmark</artifactId>
+    <artifactId>benchmark</artifactId>
 
     <properties>
-        <main.class>com.grpc.benchmark.Main</main.class>
+        <main.class>io.github.lwlee2608.benchmark.Main</main.class>
     </properties>
 
     <dependencies>

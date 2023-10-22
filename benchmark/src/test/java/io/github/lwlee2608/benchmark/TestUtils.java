@@ -1,4 +1,4 @@
-package com.grpc.benchmark.scenario;
+package io.github.lwlee2608.benchmark;
 
 public class TestUtils {
   private static final boolean DEBUG = false;

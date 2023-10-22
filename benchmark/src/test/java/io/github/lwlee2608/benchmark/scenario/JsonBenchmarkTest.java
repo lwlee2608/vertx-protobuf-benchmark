@@ -1,4 +1,4 @@
-package com.grpc.benchmark.scenario;
+package io.github.lwlee2608.benchmark.scenario;
 
 import io.github.lwlee2608.benchmark.model.TestSubject;
 import org.junit.jupiter.api.Assertions;

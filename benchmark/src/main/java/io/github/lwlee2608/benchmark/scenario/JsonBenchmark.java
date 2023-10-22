@@ -1,7 +1,7 @@
-package com.grpc.benchmark.scenario;
+package io.github.lwlee2608.benchmark.scenario;
 
 
-import com.grpc.benchmark.data.PlaceholderData;
+import io.github.lwlee2608.benchmark.data.PlaceholderData;
 import io.github.lwlee2608.benchmark.model.TestSubject;
 import io.vertx.core.json.Json;
 import org.openjdk.jmh.annotations.Benchmark;

@@ -1,4 +1,4 @@
-package com.grpc.benchmark.data;
+package io.github.lwlee2608.benchmark.data;
 
 import io.github.lwlee2608.benchmark.model.TestSubject;
 

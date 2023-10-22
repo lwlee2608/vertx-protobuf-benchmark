@@ -1,10 +1,8 @@
-package com.grpc.benchmark.scenario;
+package io.github.lwlee2608.benchmark.scenario;
 
-import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.CodedOutputStream;
-import com.grpc.benchmark.data.PlaceholderData;
-import io.github.lwlee2608.benchmark.model.TestSubject;
-import io.github.lwlee2608.benchmark.model.TestSubjectProtoConverter;
+import io.github.lwlee2608.benchmark.data.PlaceholderData;
+import io.vertx.protobuf.generated.TestSubject;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -30,8 +28,8 @@ import java.util.concurrent.TimeUnit;
 @Warmup(iterations = 1, time = 1)
 @Measurement(iterations = 5, time = 1)
 @OutputTimeUnit(TimeUnit.MICROSECONDS)
-public class ProtoVertxBenchmark {
-    private static final Logger logger = LoggerFactory.getLogger(ProtoVertxBenchmark.class);
+public class ProtoGoogleBenchmark {
+    private static final Logger logger = LoggerFactory.getLogger(ProtoGoogleBenchmark.class);
 
     @State(Scope.Benchmark)
     public static class ExecutionPlan {
@@ -40,7 +38,7 @@ public class ProtoVertxBenchmark {
 
         @Setup(Level.Trial)
         public void setUp() throws IOException {
-            testSubject = PlaceholderData.getPojo();
+            testSubject = PlaceholderData.getGoogleProtoObject();
             onWire = encode(testSubject);
         }
     }
@@ -56,16 +54,13 @@ public class ProtoVertxBenchmark {
     }
 
     public static TestSubject decode(byte[] onWire) throws IOException {
-        CodedInputStream input = CodedInputStream.newInstance(onWire);
-        TestSubject testSubject = new TestSubject();
-        TestSubjectProtoConverter.fromProto(input, testSubject);
-        return testSubject;
+        return TestSubject.parseFrom(onWire);
     }
 
     public static byte[] encode(TestSubject testSubject) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         CodedOutputStream output = CodedOutputStream.newInstance(baos, 35);
-        TestSubjectProtoConverter.toProto(testSubject, output);
+        testSubject.writeTo(output);
         output.flush();
         return baos.toByteArray();
     }

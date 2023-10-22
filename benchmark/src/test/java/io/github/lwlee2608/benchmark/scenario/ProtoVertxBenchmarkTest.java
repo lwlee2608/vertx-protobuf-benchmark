@@ -1,5 +1,6 @@
-package com.grpc.benchmark.scenario;
+package io.github.lwlee2608.benchmark.scenario;
 
+import io.github.lwlee2608.benchmark.TestUtils;
 import io.vertx.protobuf.generated.TestSubject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
