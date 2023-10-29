@@ -37,11 +37,13 @@ public class ProtoVertxBenchmark {
     public static class ExecutionPlan {
         TestSubject testSubject;
         byte[] onWire;
+        int bufferSize;
 
         @Setup(Level.Trial)
         public void setUp() throws IOException {
             testSubject = PlaceholderData.getPojo();
             onWire = encode(testSubject);
+            bufferSize = onWire.length;
         }
     }
 
@@ -52,7 +54,7 @@ public class ProtoVertxBenchmark {
 
     @Benchmark
     public byte[] encode(ExecutionPlan plan) throws IOException {
-        return encode(plan.testSubject);
+        return encode(plan.testSubject, plan.bufferSize);
     }
 
     public static TestSubject decode(byte[] onWire) throws IOException {
@@ -63,8 +65,12 @@ public class ProtoVertxBenchmark {
     }
 
     public static byte[] encode(TestSubject testSubject) throws IOException {
+        return encode(testSubject, 50);
+    }
+
+    public static byte[] encode(TestSubject testSubject, int bufferSize) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        CodedOutputStream output = CodedOutputStream.newInstance(baos, 35);
+        CodedOutputStream output = CodedOutputStream.newInstance(baos, bufferSize);
         TestSubjectProtoConverter.toProto(testSubject, output);
         output.flush();
         return baos.toByteArray();

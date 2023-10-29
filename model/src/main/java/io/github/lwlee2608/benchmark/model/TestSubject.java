@@ -5,8 +5,10 @@ import io.vertx.codegen.annotations.DataObject;
 import io.vertx.codegen.protobuf.annotations.FieldNumberStrategy;
 import io.vertx.codegen.protobuf.annotations.ProtobufGen;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 @Data
+@Accessors(chain = true)
 @DataObject
 @ProtobufGen(fieldNumberStrategy = FieldNumberStrategy.COMPACT)
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -18,5 +20,5 @@ public class TestSubject {
     private String stringField;
     private boolean boolField;
     private double doubleField;
-//    private byte[] bytesField;
+    private TestSubject childField;
 }
